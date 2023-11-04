@@ -9,7 +9,6 @@ import scala.collection.immutable.ListMap
 
 object ConwayApp {
   var gridVector: Vector[Vector[Cell]] = Vector.empty[Vector[Cell]]
-  var newGrid: Vector[Vector[Cell]] = Vector.empty[Vector[Cell]]
 
   def main(args: Array[String]): Unit = {
     val rows, columns = 30
