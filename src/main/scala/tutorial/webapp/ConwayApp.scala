@@ -12,34 +12,26 @@ object ConwayApp {
   var newGrid: Vector[Vector[Cell]] = Vector.empty[Vector[Cell]]
 
   def main(args: Array[String]): Unit = {
-    val rows, columns = 32
+    val rows, columns = 30
 
     document.addEventListener("DOMContentLoaded", { (event: dom.Event) => 
       gridVector = setupVector(rows, columns)
       setupWrapper(gridVector)
-      addRunButton()
+      addNextStepButton()
     })
-
-    // document.body.addEventListener("click", { (event: dom.Event) =>
-    // })
-    // document.body.addEventListener("wheel", { (event: dom.MouseEvent) =>
-    //   println("scroll")
-    // })
   }
 
-  @JSExportTopLevel("addClickedMessage")
-  def addClickedMessage(): Unit = {
-    val cellMap = cellCounterMap(gridVector)
+  @JSExportTopLevel("nextStep")
+  def nextStep(): Unit = {
+    val cellMap = neigborCounterMap(gridVector)
     val livelyhoodMap = checkLivelyhood(cellMap)
-    // println(livelyhoodMap)
     livelyhoodMap.map((cell, livelyhood) => (cell.setLivelyhood(livelyhood)))
   }
 
-  def cellCounterMap(inputGrid: Vector[Vector[Cell]]): Map[Cell, Int] = {
+  def neigborCounterMap(inputGrid: Vector[Vector[Cell]]): Map[Cell, Int] = {
     val weight = inputGrid.flatten.map(el => countAliveNeighbours(el))
     val cell = inputGrid.flatten
     val cellCounterMap: Map[Cell, Int] = (cell zip weight).toMap
-    // println(ListMap(cellCounterMap.toSeq.sortBy(_._1.id):_*))
     ListMap(cellCounterMap.toSeq.sortBy(_._1.id):_*)
   }
 
@@ -55,14 +47,14 @@ object ConwayApp {
   }
 
   def checkLivelyhood(inputMap: Map[Cell, Int]): Map[Cell, Livelyhood] = {
-    def calcLivelyhood(cell: Cell, neighbors: Int) = neighbors match
+    def cellNextLivelyhood(cell: Cell, neighbors: Int) = neighbors match
       case n if n < 2 & cell.livelyhood == Livelyhood.Alive => Livelyhood.Dead
       case n if (n == 2 | n == 3) & cell.livelyhood == Livelyhood.Alive => Livelyhood.Alive
       case n if n > 3 & cell.livelyhood == Livelyhood.Alive => Livelyhood.Dead
       case n if n == 3 & cell.livelyhood == Livelyhood.Dead => Livelyhood.Alive
       case n if n != 3 & cell.livelyhood == Livelyhood.Dead => Livelyhood.Dead
     
-    inputMap.map((cell, neighbors) => (cell, calcLivelyhood(cell, neighbors)))
+    inputMap.map((cell, neighbors) => (cell, cellNextLivelyhood(cell, neighbors)))
   }
 
   def appendParagraph(targetNode: dom.Node, text: String): Unit = {
@@ -71,11 +63,18 @@ object ConwayApp {
     targetNode.appendChild(parNode)
   }
 
-  def addRunButton(): Unit = {
+  def addNextStepButton(): Unit = {
     val buttonNode = document.createElement("button")
-    buttonNode.textContent = "Click me!"
+    buttonNode.textContent = "Next step!"
+    buttonNode.id = "next-step-btn"
     buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
-      addClickedMessage()
+      nextStep()
+    })
+    buttonNode.addEventListener("keypress", { (event: dom.KeyboardEvent) =>
+      if (event.key == "Enter") {
+        event.preventDefault()
+        nextStep()
+      }
     })
     document.body.appendChild(buttonNode)
   }
@@ -87,8 +86,8 @@ object ConwayApp {
                                         display: grid;
                                         grid-template-columns: repeat($columns, 1fr);
                                         grid-template-rows: repeat($rows, 1fr);
-                                        width: 500px;
-                                        height: 500px;
+                                        width: 700px;
+                                        height: 700px;
                                         gap: 1px;
                                         """)
     targetNode.appendChild(wrapperNode)
@@ -124,8 +123,6 @@ case class Cell(id: String, val row: Int, val column: Int, var livelyhood: Livel
   
   cellDiv.addEventListener("click", { (event: dom.MouseEvent) =>
       swapColour(livelyhood)
-      // setLivelyhood(livelyhood)
-      // println(s"${id}, ${livelyhood}")
   })
 
   def setLivelyhood(livelyhood: Livelyhood) = {
