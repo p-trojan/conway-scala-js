@@ -4,4 +4,7 @@
 .bloop/
 project/
 target/*
-!target/scala-3.3.1/conway-s-game-of-life-scala-js-fastopt
+!target/scala-3.3.1/
+
+target/scala-3.3.1/*
+!target/scala-3.3.1/conway-s-game-of-life-scala-js-fastopt/
