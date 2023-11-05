@@ -188,7 +188,7 @@ case class Cell(id: String, val row: Int, val column: Int, var livelyhood: Livel
   def setLivelyhood(livelyhood: Livelyhood) = {
     livelyhood match
       case Alive => {
-        cellDiv.setAttribute("style", s"background: gold;")
+        cellDiv.setAttribute("style", s"background: hsl(${row + column}, 100%, 50%);")
         this.livelyhood = Alive
       }
       case Dead => {
@@ -204,7 +204,7 @@ case class Cell(id: String, val row: Int, val column: Int, var livelyhood: Livel
         this.livelyhood = Livelyhood.Dead
       }
       case """background: grey;""" => { 
-        cellDiv.setAttribute("style", s"background: gold;")
+        cellDiv.setAttribute("style", s"background: hsl(${row + column}, 100%, 50%);")
         this.livelyhood = Livelyhood.Alive
       }
   }
