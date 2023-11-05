@@ -14,7 +14,7 @@ object ConwayApp {
   var timer: SetIntervalHandle = null
 
   def main(args: Array[String]): Unit = {
-    val rows, columns = 50
+    val rows, columns = 100
 
     document.addEventListener("DOMContentLoaded", { (event: dom.Event) => 
       gridVector = setupVector(rows, columns)
@@ -199,13 +199,13 @@ case class Cell(id: String, val row: Int, val column: Int, var livelyhood: Livel
 
   def swapColour(livelyhood: Livelyhood): Unit = {
     cellDiv.getAttribute("style") match
-      case """background: gold;""" => { 
-        cellDiv.setAttribute("style", "background: grey;")
-        this.livelyhood = Livelyhood.Dead
-      }
       case """background: grey;""" => { 
         cellDiv.setAttribute("style", s"background: hsl(${row + column}, 100%, 50%);")
-        this.livelyhood = Livelyhood.Alive
+        this.livelyhood = Alive
+      }
+      case """background: gold;""" => { 
+        cellDiv.setAttribute("style", "background: grey;")
+        this.livelyhood = Dead
       }
   }
 
