@@ -11,6 +11,7 @@ import scala.scalajs.js.timers.SetIntervalHandle
 
 object ConwayApp {
   var gridVector: Vector[Vector[Cell]] = Vector.empty[Vector[Cell]]
+  var timer: SetIntervalHandle = null
 
   def main(args: Array[String]): Unit = {
     val rows, columns = 50
@@ -21,6 +22,7 @@ object ConwayApp {
       addNextStepButton()
       addGenerateCellsButton()
       addRunButton()
+      addStopButton()
     })
   }
 
@@ -84,7 +86,17 @@ object ConwayApp {
     buttonNode.textContent = "Run!"
     buttonNode.id = "run-btn"
     buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
-        setInterval(125){ nextStep() }
+      timer = setInterval(100){ nextStep() }
+    })
+    document.body.appendChild(buttonNode)
+  }
+
+  def addStopButton(): Unit = {
+    val buttonNode = document.createElement("button")
+    buttonNode.textContent = "Halt!"
+    buttonNode.id = "run-btn"
+    buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
+      clearInterval(timer)
     })
     document.body.appendChild(buttonNode)
   }
