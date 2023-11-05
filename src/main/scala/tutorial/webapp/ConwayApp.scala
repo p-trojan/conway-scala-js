@@ -2,21 +2,25 @@ package tutorial.webapp
 
 import org.scalajs.dom
 import org.scalajs.dom.document
-import scala.scalajs.js.timers
+import scala.scalajs.js.timers._
 import scala.scalajs.js.annotation.JSExportTopLevel
 import tutorial.webapp.ConwayApp.checkLivelyhood
 import scala.collection.immutable.ListMap
+import scala.scalajs.js.timers.SetIntervalHandle
+
 
 object ConwayApp {
   var gridVector: Vector[Vector[Cell]] = Vector.empty[Vector[Cell]]
 
   def main(args: Array[String]): Unit = {
-    val rows, columns = 30
+    val rows, columns = 40
 
     document.addEventListener("DOMContentLoaded", { (event: dom.Event) => 
       gridVector = setupVector(rows, columns)
       setupWrapper(gridVector)
       addNextStepButton()
+      addGenerateCellsButton()
+      addRunButton()
     })
   }
 
@@ -62,18 +66,43 @@ object ConwayApp {
     targetNode.appendChild(parNode)
   }
 
+  def generateCells() = {
+    val random = scala.util.Random
+    val tenth = gridVector.length * gridVector(0).length * 0.1
+    for 
+      n <- 1 to tenth.toInt
+    do 
+      val i = random.nextInt(gridVector.length)
+      val j = random.nextInt(gridVector.length)
+      gridVector(i)(j).setLivelyhood(Livelyhood.Alive)
+  }
+
+  def addRunButton(): Unit = {
+    val buttonNode = document.createElement("button")
+    buttonNode.textContent = "Run!"
+    buttonNode.id = "run-btn"
+    buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
+        setInterval(125){ nextStep() }
+    })
+    document.body.appendChild(buttonNode)
+  }
+
+  def addGenerateCellsButton(): Unit = {
+    val buttonNode = document.createElement("button")
+    buttonNode.textContent = "Generate cells"
+    buttonNode.id = "generate-btn"
+    buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
+      generateCells()
+    })
+    document.body.appendChild(buttonNode)
+  }
+
   def addNextStepButton(): Unit = {
     val buttonNode = document.createElement("button")
     buttonNode.textContent = "Next step!"
     buttonNode.id = "next-step-btn"
     buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
       nextStep()
-    })
-    buttonNode.addEventListener("keypress", { (event: dom.KeyboardEvent) =>
-      if (event.key == "Enter") {
-        event.preventDefault()
-        nextStep()
-      }
     })
     document.body.appendChild(buttonNode)
   }
