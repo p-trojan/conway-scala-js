@@ -13,7 +13,7 @@ object ConwayApp {
   var gridVector: Vector[Vector[Cell]] = Vector.empty[Vector[Cell]]
 
   def main(args: Array[String]): Unit = {
-    val rows, columns = 40
+    val rows, columns = 50
 
     document.addEventListener("DOMContentLoaded", { (event: dom.Event) => 
       gridVector = setupVector(rows, columns)
@@ -35,7 +35,9 @@ object ConwayApp {
     val weight = inputGrid.flatten.map(el => countAliveNeighbours(el))
     val cell = inputGrid.flatten
     val cellCounterMap: Map[Cell, Int] = (cell zip weight).toMap
-    ListMap(cellCounterMap.toSeq.sortBy(_._1.id):_*)
+    // keep this line for debug purposes. Using ListMap has an impact on performance
+    // ListMap(cellCounterMap.toSeq.sortBy(_._1.id):_*)
+    cellCounterMap
   }
 
   def countAliveNeighbours(cell: Cell): Int = {
@@ -114,8 +116,8 @@ object ConwayApp {
                                         display: grid;
                                         grid-template-columns: repeat($columns, 1fr);
                                         grid-template-rows: repeat($rows, 1fr);
-                                        width: 700px;
-                                        height: 700px;
+                                        width: 1000px;
+                                        height: 1000px;
                                         gap: 1px;
                                         """)
     targetNode.appendChild(wrapperNode)
@@ -156,7 +158,7 @@ case class Cell(id: String, val row: Int, val column: Int, var livelyhood: Livel
   def setLivelyhood(livelyhood: Livelyhood) = {
     livelyhood match
       case Alive => {
-        cellDiv.setAttribute("style", "background: gold;")
+        cellDiv.setAttribute("style", s"background: gold;")
         this.livelyhood = Alive
       }
       case Dead => {
@@ -172,7 +174,7 @@ case class Cell(id: String, val row: Int, val column: Int, var livelyhood: Livel
         this.livelyhood = Livelyhood.Dead
       }
       case """background: grey;""" => { 
-        cellDiv.setAttribute("style", "background: gold;")
+        cellDiv.setAttribute("style", s"background: gold;")
         this.livelyhood = Livelyhood.Alive
       }
   }
