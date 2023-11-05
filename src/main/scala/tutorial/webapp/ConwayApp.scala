@@ -85,6 +85,7 @@ object ConwayApp {
     val buttonNode = document.createElement("button")
     buttonNode.textContent = "Run!"
     buttonNode.id = "run-btn"
+    buttonNode.setAttribute("style", buttonStyle())
     buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
       timer = setInterval(100){ nextStep() }
     })
@@ -94,7 +95,8 @@ object ConwayApp {
   def addStopButton(): Unit = {
     val buttonNode = document.createElement("button")
     buttonNode.textContent = "Halt!"
-    buttonNode.id = "run-btn"
+    buttonNode.id = "stop-btn"
+    buttonNode.setAttribute("style", buttonStyle())
     buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
       clearInterval(timer)
     })
@@ -105,6 +107,7 @@ object ConwayApp {
     val buttonNode = document.createElement("button")
     buttonNode.textContent = "Generate cells"
     buttonNode.id = "generate-btn"
+    buttonNode.setAttribute("style", buttonStyle())
     buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
       generateCells()
     })
@@ -115,10 +118,25 @@ object ConwayApp {
     val buttonNode = document.createElement("button")
     buttonNode.textContent = "Next step!"
     buttonNode.id = "next-step-btn"
+    buttonNode.setAttribute("style", buttonStyle())
     buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
       nextStep()
     })
     document.body.appendChild(buttonNode)
+  }
+
+  def buttonStyle(): String = {
+    s"""
+    padding: 10px 20px;
+    margin-top: 20px;
+    margin-left: 5px;
+    margin-right: 5px
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    """
   }
 
   def appendWrapper(targetNode: dom.Node, rows: Int, columns: Int): dom.Node = {
