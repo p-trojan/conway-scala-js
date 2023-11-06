@@ -3130,10 +3130,10 @@ $c_Ltutorial_webapp_ConwayApp$.prototype.main__AT__V = (function(args) {
   document.addEventListener("DOMContentLoaded", ((event) => {
     this.Ltutorial_webapp_ConwayApp$__f_gridVector = this.setupVector__I__I__sci_Vector(100, 100);
     this.setupWrapper__sci_Vector__V(this.Ltutorial_webapp_ConwayApp$__f_gridVector);
-    this.addNextStepButton__V();
     this.addGenerateCellsButton__V();
-    this.addRunButton__V();
-    this.addStopButton__V()
+    this.addClearButton__V();
+    this.addNextStepButton__V();
+    this.addRunButton__V()
   }))
 });
 $c_Ltutorial_webapp_ConwayApp$.prototype.nextStep__V = (function() {
@@ -3230,24 +3230,43 @@ $c_Ltutorial_webapp_ConwayApp$.prototype.generateCells__V = (function() {
   }
 });
 $c_Ltutorial_webapp_ConwayApp$.prototype.addRunButton__V = (function() {
+  var isIntervalInProgress = new $c_sr_BooleanRef(false);
   var buttonNode = document.createElement("button");
   buttonNode.textContent = "Run!";
   buttonNode.id = "run-btn";
   buttonNode.setAttribute("style", "\r\n    padding: 10px 20px;\r\n    margin-top: 20px;\r\n    margin-left: 5px;\r\n    margin-right: 5px\r\n    text-align: center;\r\n    text-decoration: none;\r\n    display: inline-block;\r\n    font-size: 16px;\r\n    border-radius: 5px;\r\n    ");
   buttonNode.addEventListener("click", ((event) => {
-    this.Ltutorial_webapp_ConwayApp$__f_timer = $m_sjs_js_timers_package$().setInterval__D__F0__sjs_js_timers_SetIntervalHandle(100.0, new $c_sjsr_AnonFunction0((() => {
-      this.nextStep__V()
-    })))
+    if ((!isIntervalInProgress.sr_BooleanRef__f_elem)) {
+      this.Ltutorial_webapp_ConwayApp$__f_timer = $m_sjs_js_timers_package$().setInterval__D__F0__sjs_js_timers_SetIntervalHandle(100.0, new $c_sjsr_AnonFunction0((() => {
+        buttonNode.textContent = "Halt!";
+        var ev$2 = true;
+        isIntervalInProgress.sr_BooleanRef__f_elem = ev$2;
+        this.nextStep__V()
+      })));
+      return (void 0)
+    } else {
+      buttonNode.textContent = "Run!";
+      $m_sjs_js_timers_package$().clearInterval__sjs_js_timers_SetIntervalHandle__V(this.Ltutorial_webapp_ConwayApp$__f_timer);
+      var ev$3 = false;
+      isIntervalInProgress.sr_BooleanRef__f_elem = ev$3;
+      return (void 0)
+    }
   }));
   document.body.appendChild(buttonNode)
 });
-$c_Ltutorial_webapp_ConwayApp$.prototype.addStopButton__V = (function() {
+$c_Ltutorial_webapp_ConwayApp$.prototype.addClearButton__V = (function() {
   var buttonNode = document.createElement("button");
-  buttonNode.textContent = "Halt!";
-  buttonNode.id = "stop-btn";
+  buttonNode.textContent = "Clear grid";
+  buttonNode.id = "clear-btn";
   buttonNode.setAttribute("style", "\r\n    padding: 10px 20px;\r\n    margin-top: 20px;\r\n    margin-left: 5px;\r\n    margin-right: 5px\r\n    text-align: center;\r\n    text-decoration: none;\r\n    display: inline-block;\r\n    font-size: 16px;\r\n    border-radius: 5px;\r\n    ");
   buttonNode.addEventListener("click", ((event) => {
-    $m_sjs_js_timers_package$().clearInterval__sjs_js_timers_SetIntervalHandle__V(this.Ltutorial_webapp_ConwayApp$__f_timer)
+    var this$4 = $n(this.Ltutorial_webapp_ConwayApp$__f_gridVector);
+    var this$3 = $m_s_$less$colon$less$();
+    var toIterableOnce = this$3.s_$less$colon$less$__f_singleton;
+    return $n($as_sc_StrictOptimizedIterableOps($f_sc_StrictOptimizedIterableOps__flatten__F1__O(this$4, toIterableOnce))).map__F1__O(new $c_sjsr_AnonFunction1(((it) => {
+      var it$1 = $as_Ltutorial_webapp_Cell(it);
+      $n(it$1).setLivelyhood__Ltutorial_webapp_Livelyhood__V($s_Ltutorial_webapp_Livelyhood$__Dead__Ltutorial_webapp_Livelyhood())
+    })))
   }));
   document.body.appendChild(buttonNode)
 });
@@ -3903,6 +3922,30 @@ $h_sr_AbstractFunction2.prototype = $c_sr_AbstractFunction2.prototype;
 $c_sr_AbstractFunction2.prototype.toString__T = (function() {
   return "<function2>"
 });
+/** @constructor */
+function $c_sr_BooleanRef(elem) {
+  this.sr_BooleanRef__f_elem = false;
+  this.sr_BooleanRef__f_elem = elem
+}
+$c_sr_BooleanRef.prototype = new $h_O();
+$c_sr_BooleanRef.prototype.constructor = $c_sr_BooleanRef;
+/** @constructor */
+function $h_sr_BooleanRef() {
+  /*<skip>*/
+}
+$h_sr_BooleanRef.prototype = $c_sr_BooleanRef.prototype;
+$c_sr_BooleanRef.prototype.toString__T = (function() {
+  var b = this.sr_BooleanRef__f_elem;
+  return ("" + b)
+});
+var $d_sr_BooleanRef = new $TypeData().initClass({
+  sr_BooleanRef: 0
+}, false, "scala.runtime.BooleanRef", {
+  sr_BooleanRef: 1,
+  O: 1,
+  Ljava_io_Serializable: 1
+});
+$c_sr_BooleanRef.prototype.$classData = $d_sr_BooleanRef;
 /** @constructor */
 function $c_sr_IntRef(elem) {
   this.sr_IntRef__f_elem = 0;

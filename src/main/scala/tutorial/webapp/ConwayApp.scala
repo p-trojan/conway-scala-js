@@ -19,10 +19,10 @@ object ConwayApp {
     document.addEventListener("DOMContentLoaded", { (event: dom.Event) => 
       gridVector = setupVector(rows, columns)
       setupWrapper(gridVector)
-      addNextStepButton()
       addGenerateCellsButton()
+      addClearButton()
+      addNextStepButton()
       addRunButton()
-      addStopButton()
     })
   }
 
@@ -82,23 +82,33 @@ object ConwayApp {
   }
 
   def addRunButton(): Unit = {
+    var isIntervalInProgress = false
     val buttonNode = document.createElement("button")
     buttonNode.textContent = "Run!"
     buttonNode.id = "run-btn"
     buttonNode.setAttribute("style", buttonStyle())
     buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
-      timer = setInterval(100){ nextStep() }
+      if !isIntervalInProgress then
+        timer = setInterval(100){ 
+          buttonNode.textContent = "Halt!"
+          isIntervalInProgress = true
+          nextStep() 
+      } else {
+        buttonNode.textContent = "Run!"
+        clearInterval(timer)
+        isIntervalInProgress = false
+      }
     })
     document.body.appendChild(buttonNode)
   }
 
-  def addStopButton(): Unit = {
+  def addClearButton(): Unit = {
     val buttonNode = document.createElement("button")
-    buttonNode.textContent = "Halt!"
-    buttonNode.id = "stop-btn"
+    buttonNode.textContent = "Clear grid"
+    buttonNode.id = "clear-btn"
     buttonNode.setAttribute("style", buttonStyle())
     buttonNode.addEventListener("click", { (event: dom.MouseEvent) =>
-      clearInterval(timer)
+      gridVector.flatten.map(it => it.setLivelyhood(Livelyhood.Dead))
     })
     document.body.appendChild(buttonNode)
   }
